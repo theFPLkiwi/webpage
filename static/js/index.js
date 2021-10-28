@@ -36,7 +36,7 @@ var app = new Vue({
         init_table() {
             $("#proj_table").DataTable().destroy()
             this.$nextTick(() => {
-                $("#proj_table").DataTable({
+                let t = $("#proj_table").DataTable({
                     "order": [[ 5, 'desc' ]],
                     "lengthChange": true,
                     "pageLength": 15,
@@ -49,10 +49,18 @@ var app = new Vue({
                         // "orderable": false
                         // }
                     ],
+                    "buttons": [
+                        { 'extend': 'csv', 'text': 'Download as CSV'},
+                        { 'text': 'Get raw data', 'action': (e,dt,node,config) => {
+                            window.open('https://raw.githubusercontent.com/theFPLkiwi/webpage/main/data/Projected_FPL_2122.csv');
+                        }}
+                    ],
                     "fixedHeader": true,
                     "scrollX": true,
                     "lengthMenu": [ 5, 15, 25, 50, 100 ]
                 });
+                t.buttons().container()
+                    .appendTo('#buttons');
             })
         },
         change_horizon() {

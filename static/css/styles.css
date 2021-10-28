@@ -13,3 +13,14 @@
 .paginate_button a {
     padding: 0.25em;
 }
+
+#buttons button:nth-of-type(2) {
+    border-left: 1px solid white;
+}
+
+@media (max-width: 600px) {
+    .title-text {
+        font-size: smaller;
+    }
+}
+
