@@ -39,13 +39,18 @@
                             <th class="sticky-left">Name</th>
                             <th>Pos</th>
                             <th>Team</th>
-                            <th>Price</th>
+                            <th>
+                                <span v-if="no_space_col_names">Value</span>
+                                <span v-else>Price</span>
+                            </th>
                             <template v-for="gw in _.range(start_gw, last_gw)">
                                 <th >
-                                    xPts {{ gw }}
+                                    <span v-if="no_space_col_names">{{ gw }}_Pts</span>
+                                    <span v-else>xPts {{ gw }}</span>
                                 </th>
                                 <th>
-                                    xMin {{ gw }}
+                                    <span v-if="no_space_col_names">{{ gw }}_xMins</span>
+                                    <span v-else>xMin {{ gw }}</span>
                                 </th>
                             </template>
                             <th>{{ keys[5] || '' }}</th>
@@ -55,9 +60,15 @@
                         <tr v-for="p in vals">
                             <td class="text-muted">{{ p.ID }}</td>
                             <td class="sticky-left">{{ p.Name }}</td>
-                            <td>{{ p.Pos }}</td>
+                            <td>
+                                <span v-if="no_space_col_names">{{ p.Pos[0] }}</span>
+                                <span v-else>{{ p.Pos }}</span>
+                            </td>
                             <td>{{ p.Team }}</td>
-                            <td>{{ p.Price }}</td>
+                            <td>
+                                <span v-if="no_space_col_names">{{ Math.round(p.Price*10,0) }}</span>
+                                <span v-else>{{ p.Price }}</span>
+                            </td>
                             <template v-for="gw in _.range(start_gw, last_gw)">
                                 <td :style="{'color': scaled_color({d: p['xPts ' + gw], min:1, max:6})}">
                                     {{ parseFloat(p['xPts ' + gw]).toFixed(2) }}
@@ -82,8 +93,8 @@
             </div>
         </div>
 
-        <div class="container d-flex justify-content-center mb-5 mt-2" v-if="!_.isEmpty(keys)">
-            <div>
+        <div class="container d-flex justify-content-center mb-2 mt-2" v-if="!_.isEmpty(keys)">
+            <div class="m-3">
                 <div class="form-group">
                     <label for="horizonSelect">Show Horizon</label>
                     <select class="form-control" id="horizonSelect" @change="change_horizon">
@@ -91,6 +102,16 @@
                         <option value="5" selected>5</option>
                         <option value="10">10</option>
                         <option value="99">Max</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="m-3">
+                <div class="form-group">
+                    <label for="headerSelect">Header Style</label>
+                    <select class="form-control" id="headerSelect" @change="change_horizon" v-model="no_space_col_names">
+                        <option :value="false">Original</option>
+                        <option :value="true">No Space</option>
                     </select>
                 </div>
             </div>

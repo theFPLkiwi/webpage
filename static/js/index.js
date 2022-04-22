@@ -25,7 +25,8 @@ var app = new Vue({
         start_gw: null,
         horizon: 5,
         scaled_color: scaled_color,
-        table_data_ready: false
+        table_data_ready: false,
+        no_space_col_names: false
     },
     computed: {
         last_gw() {
