@@ -53,7 +53,7 @@ var app = new Vue({
                     "buttons": [
                         { 'extend': 'csv', 'text': 'Download as CSV'},
                         { 'text': 'Get raw data', 'action': (e,dt,node,config) => {
-                            window.open('https://raw.githubusercontent.com/theFPLkiwi/webpage/main/data/Projected_FPL_2223.csv');
+                            window.open('https://raw.githubusercontent.com/theFPLkiwi/webpage/main/data/Projected_FPL_2324.csv');
                         }}
                     ],
                     "fixedHeader": true,
@@ -86,7 +86,7 @@ async function fetch_latest_data() {
         let dt = Date.now()
         $.ajax({
             type: "GET",
-            url: `data/Projected_FPL_2223.csv?dt=${dt}`,
+            url: `data/Projected_FPL_2324.csv?dt=${dt}`,
             dataType: "text",
             async: true,
             success: function(data) {
