@@ -222,3 +222,42 @@ input.colf:focus {
 td.col-total {
     font-weight: 600;
 }
+
+/* column widths: names never wrap; number columns as narrow as their header allows */
+#proj_table th,
+#proj_table td,
+.dataTables_scrollHead th {
+    padding: 0.3rem 0.35rem;
+    white-space: nowrap;
+}
+.col-name {
+    white-space: nowrap;
+}
+/* the sort arrows sit inside the header's right padding: keep it just wide enough for them */
+table.dataTable thead > tr > th.sorting,
+table.dataTable thead > tr > th.sorting_asc,
+table.dataTable thead > tr > th.sorting_desc {
+    padding-right: 1.3rem;
+}
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_desc:before {
+    right: 0.6rem;
+}
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:after {
+    right: 0.2rem;
+}
+/* min / max boxes follow the column width instead of setting it */
+input.colf {
+    width: 100%;
+    min-width: 2.4rem;
+    box-sizing: border-box;
+    -moz-appearance: textfield;
+}
+input.colf::-webkit-outer-spin-button,
+input.colf::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

@@ -49,7 +49,8 @@ function summary_titles() {
     let gws = shown_gws()
     let a = gws[0], b = gws[gws.length - 1]
     if (S.no_space) return [`${a}-${b}_Pts`, `${a}-${b}_xMins`]
-    return S.decay < 1 ? [`Decayed xPts GW${a}-${b}`, 'Weighted avg xMin'] : [`xPts GW${a}-${b}`, 'Avg xMin']
+    let star = S.decay < 1 ? '*' : ''          // * = decayed, linked to the "Decay per GW*" box
+    return [`xPts${star} GW${a}-${b}`, `Avg xMin${star}`]
 }
 
 function build_columns() {
@@ -57,8 +58,8 @@ function build_columns() {
     let gws = shown_gws()
     let [t_total, t_avg] = summary_titles()
     let cols = [
-        { key: 'id', title: 'ID', data: 'id', className: 'text-muted' },
-        { key: 'name', title: 'Name', data: 'name', className: 'sticky-left text-left' },
+        { key: 'id', title: 'ID', data: 'id', className: 'text-muted text-right' },
+        { key: 'name', title: 'Name', data: 'name', className: 'sticky-left text-left col-name' },
         { key: 'pos', title: 'Pos', data: r => ns ? r.pos[0] : r.pos },
         { key: 'team', title: 'Team', data: 'team' },
         { key: 'price', title: ns ? 'Value' : 'Price', data: r => ns ? Math.round(r.price * 10) : r.price,
