@@ -1,4 +1,19 @@
 
+/* theFPLkiwi colours: FPL purple + kiwi green. The bright green is for use on purple;
+   on white, use the dark green so text stays readable. */
+:root {
+    --fpl-purple: #37003c;
+    --fpl-purple-soft: #5b2a60;
+    --kiwi-green: #8dc63f;
+    --kiwi-green-dark: #4a7314;
+    --kiwi-tint: #f2f8e8;
+}
+
+body {
+    background: #ffffff;
+    color: #212529;
+}
+
 .text-small {
     font-size: small !important;
 }
@@ -8,6 +23,77 @@
     left: 0 !important;
     background-color: white !important;
     z-index: 99;
+}
+
+/* header bar */
+.kiwi-nav {
+    background-color: var(--fpl-purple);
+    border-bottom: 4px solid var(--kiwi-green);
+}
+.kiwi-nav .navbar-brand,
+.kiwi-nav .navbar-brand:hover {
+    color: #ffffff;
+    font-weight: 600;
+}
+.kiwi-nav .nav-link-kiwi {
+    color: var(--kiwi-green);
+    font-weight: 600;
+}
+.kiwi-nav .nav-link-kiwi:hover,
+.kiwi-nav .nav-link-kiwi:focus {
+    color: #ffffff;
+}
+
+.updated-line {
+    margin-top: 0.75rem;
+    color: var(--fpl-purple-soft);
+    font-size: small;
+    font-weight: 600;
+}
+
+/* table headers */
+table.dataTable thead th,
+#proj_table thead th {
+    background-color: var(--fpl-purple) !important;
+    color: #ffffff;
+    border-bottom: 3px solid var(--kiwi-green) !important;
+    border-top: none;
+    white-space: nowrap;
+}
+table.dataTable thead th.text-muted {
+    color: #d9c7db !important;
+}
+#proj_table tbody tr:hover td {
+    background-color: var(--kiwi-tint);
+}
+#proj_table tbody tr:hover td.sticky-left {
+    background-color: var(--kiwi-tint) !important;
+}
+
+/* controls */
+.form-group label {
+    color: var(--fpl-purple);
+    font-weight: 600;
+}
+.page-item.active .page-link {
+    background-color: var(--fpl-purple);
+    border-color: var(--fpl-purple);
+    color: #ffffff;
+}
+.page-link {
+    color: var(--kiwi-green-dark);
+}
+.page-link:hover {
+    color: var(--fpl-purple);
+}
+#buttons .btn-secondary {
+    background-color: var(--fpl-purple);
+    border-color: var(--fpl-purple);
+}
+#buttons .btn-secondary:hover,
+#buttons .btn-secondary:focus {
+    background-color: var(--kiwi-green-dark);
+    border-color: var(--kiwi-green-dark);
 }
 
 .paginate_button a {
@@ -24,3 +110,115 @@
     }
 }
 
+/* controls above the table */
+.controls {
+    margin-top: 0.75rem;
+}
+.control-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    align-items: flex-start;
+}
+.control-row .form-group {
+    margin-bottom: 0.5rem;
+}
+.control-row #decayInput {
+    width: 6rem;
+}
+.control-row .form-text {
+    color: #6c757d;
+}
+.form-check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 1.9rem;
+}
+.btn-outline-kiwi {
+    color: var(--kiwi-green-dark);
+    border-color: var(--kiwi-green-dark);
+}
+.btn-outline-kiwi:hover,
+.btn-outline-kiwi:focus {
+    color: #ffffff;
+    background-color: var(--kiwi-green-dark);
+}
+
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+}
+.chip-label {
+    color: var(--fpl-purple);
+    font-weight: 600;
+    font-size: small;
+    width: 4.5rem;
+}
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+.chip {
+    font-size: small;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid #cdbfce;
+    background: #ffffff;
+    color: #6c757d;
+    cursor: pointer;
+}
+.chip.on {
+    background: var(--fpl-purple);
+    border-color: var(--fpl-purple);
+    color: #ffffff;
+}
+.chip:focus-visible,
+.chip-all:focus-visible {
+    outline: 2px solid var(--kiwi-green-dark);
+    outline-offset: 1px;
+}
+.chip-all {
+    font-size: small;
+    background: none;
+    border: none;
+    color: var(--kiwi-green-dark);
+    text-decoration: underline;
+    padding: 0 0.2rem;
+    cursor: pointer;
+}
+.filter-hint {
+    font-size: small;
+    color: #6c757d;
+}
+
+/* min / max row under the column headers */
+table.dataTable thead tr.filter-row th {
+    background-color: #f4eef5 !important;
+    border-bottom: 1px solid #dcd0dd !important;
+    padding: 2px 3px;
+}
+table.dataTable thead tr.filter-row th:before,
+table.dataTable thead tr.filter-row th:after {
+    display: none;
+}
+input.colf {
+    display: block;
+    width: 4.4rem;
+    margin: 1px auto;
+    font-size: 11px;
+    padding: 1px 3px;
+    border: 1px solid #cdbfce;
+    border-radius: 3px;
+}
+input.colf:focus {
+    outline: 2px solid var(--kiwi-green-dark);
+    border-color: var(--kiwi-green-dark);
+}
+td.col-total {
+    font-weight: 600;
+}

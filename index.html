@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8" />
     <title>FPL Kiwi - FPL Projections</title>
 
     <meta name="description" content="FPL predictions from The FPL Kiwi" />
@@ -19,109 +20,79 @@
 <body>
 
     <header>
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-dark kiwi-nav">
             <div class="container d-flex justify-content-between">
                 <img src="./static/img/icon.jpg" class="rounded" height="30" />
                 <a class="navbar-brand mb-0 h1 title-text" href="index.html">The FPL Kiwi - FPL Projections</a>
-                <a class="title-text" href="https://twitter.com/theFPLkiwi" target="_blank">Twitter</a>
+                <a class="title-text nav-link-kiwi" href="https://twitter.com/theFPLkiwi" target="_blank">Twitter</a>
             </div>
         </nav>
     </header>
 
-    <main id="app">
+    <main>
 
-        <div class="container" v-if="!_.isEmpty(keys) && table_data_ready">
-            <div class="" v-if="table_data_ready">
-                <table class="table table-sm text-small text-center mt-3" id="proj_table">
-                    <thead>
-                        <tr>
-                            <th class="text-muted">ID</th>
-                            <th class="sticky-left">Name</th>
-                            <th>Pos</th>
-                            <th>Team</th>
-                            <th>
-                                <span v-if="no_space_col_names">Value</span>
-                                <span v-else>Price</span>
-                            </th>
-                            <template v-for="gw in _.range(start_gw, last_gw)">
-                                <th >
-                                    <span v-if="no_space_col_names">{{ gw }}_Pts</span>
-                                    <span v-else>xPts {{ gw }}</span>
-                                </th>
-                                <th>
-                                    <span v-if="no_space_col_names">{{ gw }}_xMins</span>
-                                    <span v-else>xMin {{ gw }}</span>
-                                </th>
-                            </template>
-                            <th>{{ keys[5] || '' }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="p in vals">
-                            <td class="text-muted">{{ p.ID }}</td>
-                            <td class="sticky-left">{{ p.Name }}</td>
-                            <td>
-                                <span v-if="no_space_col_names">{{ p.Pos[0] }}</span>
-                                <span v-else>{{ p.Pos }}</span>
-                            </td>
-                            <td>{{ p.Team }}</td>
-                            <td>
-                                <span v-if="no_space_col_names">{{ Math.round(p.Price*10,0) }}</span>
-                                <span v-else>{{ p.Price }}</span>
-                            </td>
-                            <template v-for="gw in _.range(start_gw, last_gw)">
-                                <td :style="{'color': scaled_color({d: p['xPts ' + gw], min:1, max:6})}">
-                                    {{ parseFloat(p['xPts ' + gw]).toFixed(2) }}
-                                </td>
-                                <td :style="{'color': scaled_color({d: p['GW xMins ' + gw], min:40, max:80})}">
-                                    {{ parseFloat(p['GW xMins ' + gw]).toFixed(2) }}
-                                </td>
-                            </template>
-                            <td>{{ parseFloat(p[keys[5]]).toFixed(2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- {{ vals[0] }} -->
-            </div>
-            <div class="d-flex justify-content-center" id="buttons"></div>
-        </div>
-        <div class="container" v-else>
-            <div class="d-flex justify-content-center">
-                <div>
-                    Loading data...
-                </div>
-            </div>
+        <div class="container updated-line" id="updatedLine"></div>
+
+        <div class="container" id="loading">
+            <div class="d-flex justify-content-center my-4">Loading data...</div>
         </div>
 
-        <div class="container d-flex justify-content-center mb-2 mt-2" v-if="!_.isEmpty(keys)">
-            <div class="m-3">
+        <div class="container controls" id="controls" style="display: none">
+            <div class="control-row">
                 <div class="form-group">
-                    <label for="horizonSelect">Show Horizon</label>
-                    <select class="form-control" id="horizonSelect" @change="change_horizon">
+                    <label for="horizonSelect">Show horizon</label>
+                    <select class="form-control form-control-sm" id="horizonSelect">
                         <option value="1">1</option>
-                        <option value="5" selected>5</option>
+                        <option value="5">5</option>
                         <option value="10">10</option>
-                        <option value="99">Max</option>
+                        <option value="99" selected>All</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="m-3">
                 <div class="form-group">
-                    <label for="headerSelect">Header Style</label>
-                    <select class="form-control" id="headerSelect" @change="change_horizon" v-model="no_space_col_names">
-                        <option :value="false">Original</option>
-                        <option :value="true">No Space</option>
+                    <label for="headerSelect">Header style</label>
+                    <select class="form-control form-control-sm" id="headerSelect">
+                        <option value="false" selected>Original</option>
+                        <option value="true">No Space</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="decayInput">Decay per GW</label>
+                    <input type="number" class="form-control form-control-sm" id="decayInput"
+                           value="1" min="0.01" max="1" step="0.01" aria-describedby="decayHelp">
+                    <small id="decayHelp" class="form-text">1 = no decay; e.g. 0.88</small>
+                </div>
+                <div class="form-group form-check-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="cheapestCheck">
+                        <label class="form-check-label" for="cheapestCheck">Cheapest per position only</label>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-kiwi" id="resetFilters">Reset filters</button>
+                </div>
             </div>
+            <div class="chip-row">
+                <span class="chip-label">Positions</span>
+                <div id="posChips" class="chips"></div>
+                <button type="button" class="chip-all" data-all="pos" data-on="1">All</button>
+                <button type="button" class="chip-all" data-all="pos" data-on="0">None</button>
+            </div>
+            <div class="chip-row">
+                <span class="chip-label">Teams</span>
+                <div id="teamChips" class="chips"></div>
+                <button type="button" class="chip-all" data-all="team" data-on="1">All</button>
+                <button type="button" class="chip-all" data-all="team" data-on="0">None</button>
+            </div>
+            <div class="filter-hint">Min / max boxes under each column header filter that column.</div>
         </div>
-        
+
+        <div class="container" id="tableArea" style="display: none">
+            <table class="table table-sm text-small text-center mt-2" id="proj_table"></table>
+            <div class="d-flex justify-content-center mb-3" id="buttons"></div>
+        </div>
+
     </main>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" integrity="sha512-WNLxfP/8cVYL9sj8Jnp6et0BkubLP31jhTG9vhL/F5uEZmg5wEzKoXp1kJslzPQWwPT1eyMiSxlKCgzHLOTOTQ==" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js" integrity="sha256-ur/YlHMU96MxHEsy3fHGszZHas7NzH4RQlD4tDVvFhw=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/b-1.6.5/b-colvis-1.6.5/b-html5-1.6.5/fc-3.3.2/fh-3.1.7/r-2.2.6/sp-1.2.2/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.21/jquery.csv.js" integrity="sha512-2ypsPur7qcA+2JjmmIJR1c4GWFqTLIe1naXXplraMg0aWyTOyAMpOk+QL+ULpzwrO/GdwA3qB3FhVyyiR8gdhw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
