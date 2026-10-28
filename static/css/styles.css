@@ -145,10 +145,11 @@ table.dataTable thead th.text-muted {
     background-color: var(--kiwi-green-dark);
 }
 
+/* heading stays on the first line; the chips (and All / None) wrap beside it */
 .chip-row {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-wrap: nowrap;
+    align-items: flex-start;
     gap: 0.35rem;
     margin-bottom: 0.4rem;
 }
@@ -156,12 +157,19 @@ table.dataTable thead th.text-muted {
     color: var(--fpl-purple);
     font-weight: 600;
     font-size: small;
-    width: 4.5rem;
+    flex: 0 0 4.5rem;
+    padding-top: 0.15rem;
 }
-.chips {
+.chip-flow {
+    flex: 1 1 auto;
+    min-width: 0;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.3rem;
+}
+.chips {
+    display: contents;
 }
 .chip {
     font-size: small;
@@ -260,4 +268,33 @@ input.colf::-webkit-outer-spin-button,
 input.colf::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+/* show / hide buttons */
+.toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding-top: 1.9rem;
+}
+.btn-toggle {
+    color: #ffffff;
+    background-color: var(--fpl-purple);
+    border-color: var(--fpl-purple);
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+    color: #ffffff;
+    background-color: var(--fpl-purple-soft);
+    border-color: var(--fpl-purple-soft);
+}
+.panel-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    margin: 0.2rem 0 0.4rem;
+}
+#tableArea.hide-minmax tr.filter-row {
+    display: none;
 }

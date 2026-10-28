@@ -102,6 +102,38 @@ function refilter() {
         pass = pass.map((p, i) => p && S.rows[i].price === minp[S.rows[i].pos])
     }
     S.visible = new Set(pass.flatMap((p, i) => p ? [i] : []))
+    toggle_labels()
+}
+
+// show / hide the filter panel and the min/max header row; hidden filters still apply, so the
+// buttons count the active ones. The choice is remembered per browser (best effort).
+const UI = { filters: false, minmax: false }    // hidden for new visitors (user 2026-10-28)
+try { Object.assign(UI, JSON.parse(localStorage.getItem('kiwi_ui') || '{}')) } catch (e) {}
+
+function save_ui() {
+    try { localStorage.setItem('kiwi_ui', JSON.stringify(UI)) } catch (e) {}
+}
+
+function n_top_filters() {
+    let all_pos = _.uniq(S.rows.map(r => r.pos)).length, all_team = _.uniq(S.rows.map(r => r.team)).length
+    return (S.pos.size < all_pos) + (S.team.size < all_team) + S.cheapest
+}
+
+function n_minmax_filters() {
+    return _.filter(S.ranges, f => (f.min !== '' && f.min != null) || (f.max !== '' && f.max != null)).length
+}
+
+function toggle_labels() {
+    const label = (shown, what, n) => `${shown ? 'Hide' : 'Show'} ${what}${n ? ` (${n} active)` : ''}`
+    $('#toggleFilters').text(label(UI.filters, 'filters', n_top_filters())).attr('aria-expanded', UI.filters)
+    $('#toggleMinMax').text(label(UI.minmax, 'min/max', n_minmax_filters())).attr('aria-expanded', UI.minmax)
+}
+
+function apply_ui() {
+    $('#filterPanel').toggle(UI.filters)
+    $('#tableArea').toggleClass('hide-minmax', !UI.minmax)
+    if (S.table) S.table.columns.adjust()
+    toggle_labels()
 }
 
 $.fn.dataTable.ext.search.push((settings, searchData, dataIndex) =>
@@ -138,6 +170,13 @@ function build_table() {
         orderCellsTop: true,
         pageLength: 15,
         lengthMenu: [5, 15, 25, 50, 100],
+        language: {
+            lengthMenu: 'Show _MENU_ players',
+            info: 'Showing _START_ to _END_ of _TOTAL_ players',
+            infoEmpty: 'Showing 0 players',
+            infoFiltered: '(filtered from _MAX_ players)',
+            zeroRecords: 'No matching players'
+        },
         scrollX: true,
         deferRender: true,
         buttons: [
@@ -191,6 +230,8 @@ function bind_controls() {
         apply_decay()
     })
     $('#cheapestCheck').on('change', e => { S.cheapest = e.target.checked; redraw() })
+    $('#toggleFilters').on('click', () => { UI.filters = !UI.filters; save_ui(); apply_ui() })
+    $('#toggleMinMax').on('click', () => { UI.minmax = !UI.minmax; save_ui(); apply_ui() })
     const toggle = (el, set) => $(el).on('click', '.chip', e => {
         let v = $(e.currentTarget).data('v')
         set.has(v) ? set.delete(v) : set.add(v)
@@ -247,6 +288,7 @@ async function fetch_latest_data() {
     build_table()
     $('#loading').hide()
     $('#tableArea, #controls').show()
+    apply_ui()
 }
 
 $(document).ready(() => {

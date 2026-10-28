@@ -58,10 +58,33 @@
                 <div class="form-group">
                     <label for="decayInput">Decay per GW*</label>
                     <input type="number" class="form-control form-control-sm" id="decayInput"
-                           value="1" min="0.01" max="1" step="0.01" aria-describedby="decayHelp">
-                    <small id="decayHelp" class="form-text">1 = no decay; e.g. 0.88</small>
+                           value="1" min="0.01" max="1" step="0.01">
                 </div>
-                <div class="form-group form-check-group">
+                <div class="form-group toggle-group">
+                    <button type="button" class="btn btn-sm btn-toggle" id="toggleFilters"
+                            aria-controls="filterPanel" aria-expanded="false">Show filters</button>
+                    <button type="button" class="btn btn-sm btn-toggle" id="toggleMinMax"
+                            aria-expanded="false">Show min/max</button>
+                </div>
+            </div>
+            <div id="filterPanel">
+                <div class="chip-row">
+                    <span class="chip-label">Positions</span>
+                    <div class="chip-flow">
+                        <div id="posChips" class="chips"></div>
+                        <button type="button" class="chip-all" data-all="pos" data-on="1">All</button>
+                        <button type="button" class="chip-all" data-all="pos" data-on="0">None</button>
+                    </div>
+                </div>
+                <div class="chip-row">
+                    <span class="chip-label">Teams</span>
+                    <div class="chip-flow">
+                        <div id="teamChips" class="chips"></div>
+                        <button type="button" class="chip-all" data-all="team" data-on="1">All</button>
+                        <button type="button" class="chip-all" data-all="team" data-on="0">None</button>
+                    </div>
+                </div>
+                <div class="panel-row">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="cheapestCheck">
                         <label class="form-check-label" for="cheapestCheck">Cheapest per position only</label>
@@ -69,19 +92,6 @@
                     <button type="button" class="btn btn-sm btn-outline-kiwi" id="resetFilters">Reset filters</button>
                 </div>
             </div>
-            <div class="chip-row">
-                <span class="chip-label">Positions</span>
-                <div id="posChips" class="chips"></div>
-                <button type="button" class="chip-all" data-all="pos" data-on="1">All</button>
-                <button type="button" class="chip-all" data-all="pos" data-on="0">None</button>
-            </div>
-            <div class="chip-row">
-                <span class="chip-label">Teams</span>
-                <div id="teamChips" class="chips"></div>
-                <button type="button" class="chip-all" data-all="team" data-on="1">All</button>
-                <button type="button" class="chip-all" data-all="team" data-on="0">None</button>
-            </div>
-            <div class="filter-hint">Min / max boxes under each column header filter that column.</div>
         </div>
 
         <div class="container" id="tableArea" style="display: none">
