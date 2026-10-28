@@ -298,3 +298,26 @@ input.colf::-webkit-inner-spin-button {
 #tableArea.hide-minmax tr.filter-row {
     display: none;
 }
+
+/* horizontal scrolling of the single table */
+.table-scroll {
+    overflow-x: auto;
+}
+.table-scroll table.dataTable {
+    margin-top: 0 !important;
+}
+/* body cells keep the same right padding as the headers (room for the sort arrows), so numbers
+   centre under their header text */
+#proj_table tbody td {
+    padding-right: 1.3rem;
+}
+
+/* single-table header rules (scoped to #proj_table so they outrank the generic cell padding above) */
+#proj_table thead tr:first-child th {
+    padding-right: 1.3rem;          /* room for the sort arrows */
+}
+#proj_table thead tr.filter-row th {
+    background-color: #f4eef5 !important;
+    border-bottom: 1px solid #dcd0dd !important;
+    padding: 2px 3px;
+}

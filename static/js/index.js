@@ -177,7 +177,12 @@ function build_table() {
             infoFiltered: '(filtered from _MAX_ players)',
             zeroRecords: 'No matching players'
         },
-        scrollX: true,
+        // one table scrolled inside its own div (not scrollX, which splits header and body into two tables
+        // whose widths can drift apart); widths left to the browser
+        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'table-scroll'tr>" +          // no padded column wrapper: the pinned Name column reaches the edge
+             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        autoWidth: false,
         deferRender: true,
         buttons: [
             { extend: 'csv', text: 'Download as CSV', exportOptions: { format: { header: (d, i) => S.columns[i].title } } },
