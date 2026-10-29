@@ -321,3 +321,8 @@ input.colf::-webkit-inner-spin-button {
     border-bottom: 1px solid #dcd0dd !important;
     padding: 2px 3px;
 }
+
+/* in-app viewers: no pinned Name column (see index.js) */
+.no-sticky .sticky-left {
+    position: static !important;
+}

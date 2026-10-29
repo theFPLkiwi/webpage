@@ -296,6 +296,12 @@ async function fetch_latest_data() {
     apply_ui()
 }
 
+// In-app viewers (Android WebView, e.g. the Twitter / X app) misplace sticky table cells after the page scrolls:
+// there the Name column scrolls with the table instead of staying pinned.
+if (/; wv\)|Twitter|FBAN|FBAV|Instagram/.test(navigator.userAgent)) {
+    document.documentElement.classList.add('no-sticky')
+}
+
 $(document).ready(() => {
     fetch_latest_data().then(() => console.log('ready'), e => {
         console.error('No data', e)
