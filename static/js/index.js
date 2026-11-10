@@ -39,10 +39,11 @@ function recompute() {
     })
 }
 
+// shown at `digits` decimals; the CSV download keeps up to 3
 const num = (digits, color) => (d, type) =>
     type === 'display'
         ? (color ? `<span style="color:${color(d)}">${d.toFixed(digits)}</span>` : d.toFixed(digits))
-        : d
+        : type === 'export' ? Math.round(d * 1000) / 1000 : d
 
 // titles of the total and average columns; No Space style: 9-22_Pts / 9-22_xMins (decayed or not)
 function summary_titles() {
@@ -50,7 +51,7 @@ function summary_titles() {
     let a = gws[0], b = gws[gws.length - 1]
     if (S.no_space) return [`${a}-${b}_Pts`, `${a}-${b}_xMins`]
     let star = S.decay < 1 ? '*' : ''          // * = decayed, linked to the "Decay per GW*" box
-    return [`xPts${star} GW${a}-${b}`, `Avg xMin${star}`]
+    return [`xPts${star} ${a}-${b}`, `Avg xMin${star}`]
 }
 
 function build_columns() {
@@ -65,7 +66,7 @@ function build_columns() {
         { key: 'price', title: ns ? 'Value' : 'Price', data: r => ns ? Math.round(r.price * 10) : r.price,
           filter: true },
         { key: 'total', title: t_total, data: 'total',
-          render: num(2), filter: true, className: 'col-total' },
+          render: num(1), filter: true, className: 'col-total' },
         { key: 'avg_min', title: t_avg, data: 'avg_min',
           render: num(1), filter: true },
     ]
@@ -73,7 +74,7 @@ function build_columns() {
         cols.push({ key: `pts_${g}`, title: ns ? `${g}_Pts` : `xPts ${g}`, data: r => r.pts[g],
                     render: num(2, d => scaled_color({ d, min: 1, max: 6 })), filter: true })
         cols.push({ key: `min_${g}`, title: ns ? `${g}_xMins` : `xMin ${g}`, data: r => r.min[g],
-                    render: num(2, d => scaled_color({ d, min: 40, max: 80 })), filter: true })
+                    render: num(0, d => scaled_color({ d, min: 40, max: 80 })), filter: true })
     })
     return cols
 }
@@ -185,7 +186,7 @@ function build_table() {
         autoWidth: false,
         deferRender: true,
         buttons: [
-            { extend: 'csv', text: 'Download as CSV', exportOptions: { format: { header: (d, i) => S.columns[i].title } } },
+            { extend: 'csv', text: 'Download as CSV', exportOptions: { orthogonal: 'export', format: { header: (d, i) => S.columns[i].title } } },
             { text: 'Get raw data', action: () =>
                 window.open('https://raw.githubusercontent.com/theFPLkiwi/webpage/main/data/' + S.file) }
         ]

@@ -326,3 +326,191 @@ input.colf::-webkit-inner-spin-button {
 .no-sticky .sticky-left {
     position: static !important;
 }
+
+/* tabs */
+.kiwi-tabs {
+    margin-top: 0.75rem;
+    border-bottom: 2px solid var(--fpl-purple);
+}
+.kiwi-tabs .nav-link {
+    color: var(--fpl-purple);
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+.kiwi-tabs .nav-link:hover {
+    color: var(--kiwi-green-dark);
+}
+.kiwi-tabs .nav-link.active {
+    color: #ffffff;
+    background-color: var(--fpl-purple);
+    border-color: var(--fpl-purple);
+}
+
+/* graphics: the FPL_viz.xlsx grid (columns 125 + 53 px, rows 19 px, Rockwell 11pt). Rockwell comes from the
+   viewer's computer (it ships with Windows / Office); Arvo is the nearest free slab serif for everyone else. */
+.viz-scroll {
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+}
+table.viz {
+    border-collapse: collapse;
+    table-layout: fixed;            /* needs an explicit width, or narrow screens fall back to content-sized columns */
+    width: calc(6 * (var(--nm-w, 125px) + 53px));
+    min-width: calc(6 * (var(--nm-w, 125px) + 53px));
+    border: 1px solid #000;
+    font-family: Rockwell, "Rockwell Nova", Arvo, Georgia, serif;
+    font-size: 11pt;
+    color: #000;
+    background: #ffffff;
+}
+table.viz col.c-nm { width: var(--nm-w, 125px); }
+table.viz col.c-pt { width: 53px; }
+table.viz th {
+    background: #37003c;
+    color: #ffffff;
+    font-family: "Radikal", sans-serif;     /* column headings; everything else in the graphics is Rockwell */
+    font-weight: bold;
+    text-align: center;
+    height: 19px;
+    padding: 0 2px;
+    border: 1px solid #000;
+    white-space: nowrap;
+    line-height: 1.1;
+}
+table.viz td {
+    height: 19px;
+    padding: 0 3px;
+    line-height: 1.1;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    border: none;
+}
+table.viz td.nm { border-left: 1px solid #000; }
+table.viz td.pt { font-family: Consolas, Menlo, Monaco, monospace; }
+/* second column of the same position: dotted divider */
+table.viz th.dl,
+table.viz td.nm.dl { border-left: 1px dotted #000; }
+table.viz th.dr { border-right: 1px dotted #000; }
+table.viz td.empty { background: #37003c; }
+table.viz td.gap { background: linear-gradient(90deg, #00ff87, #02effd); }
+
+/* corners of graphics 1 and 2: kiwi, handle and explainer (GK column), FPL logo (FWD column) */
+table.viz td.corner {
+    background: #37003c;
+    padding: 0;
+    vertical-align: middle;
+    white-space: normal;
+}
+.corner-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+}
+.corner-kiwi {
+    width: 88px;
+    height: 78px;
+}
+.corner-handle {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16pt;
+    line-height: 1.2;
+}
+.corner-text {
+    align-self: stretch;
+    color: #ffffff;
+    font-style: italic;
+    text-align: left;
+    line-height: 1.15;
+}
+table.next-gw .corner-text { font-size: 11pt; }
+table.planning .corner-text { font-size: 10pt; }
+table.viz td.corner-fpl { vertical-align: middle; }
+
+@font-face {
+    font-family: "Radikal";
+    src: url("../fonts/radikal-bold.ttf") format("truetype");
+    font-weight: 700;
+    font-display: block;
+}
+.fpl-fantasy {
+    font-family: "Radikal", sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* FPL logo from parts. Heights in the parts' own proportions: Premier 51, League 66, lion 103 (source px) */
+.fpl-mark {
+    display: flex;
+    align-items: center;
+}
+.fpl-mark img { display: block; }
+.fpl-pl {
+    display: flex;
+    align-items: center;
+}
+.fpl-words {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.fpl-mark.stacked {
+    flex-direction: column;
+    gap: 5px;
+}
+.fpl-mark.stacked .fpl-fantasy { font-size: 33px; }
+.fpl-mark.stacked .fpl-pl { gap: 6px; }
+.fpl-mark.stacked .fpl-lion { height: 38px; }
+.fpl-mark.stacked .fpl-premier { height: 15px; margin-bottom: 2px; }
+.fpl-mark.stacked .fpl-league { height: 19.5px; }
+.fpl-mark.wide {
+    gap: 6px;
+    flex: none;
+}
+.fpl-mark.wide .fpl-fantasy { font-size: 26px; }
+.fpl-mark.wide .fpl-pl { gap: 4px; }
+.fpl-mark.wide .fpl-lion { height: 32px; }
+.fpl-mark.wide .fpl-premier { height: 12.5px; margin-bottom: 1px; }
+.fpl-mark.wide .fpl-league { height: 16px; }
+
+/* graphic 3's footer: two "@theFPLkiwi top captains" banners: kiwi, text, wide FPL logo */
+table.viz td.banner {
+    height: 38px;
+    padding: 0;
+    background: #37003c;
+    border: 1px solid #000;
+}
+.banner-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 6px 0 10px;
+}
+.banner-kiwi {
+    width: 44px;
+    height: 39px;
+    flex: none;
+}
+.banner-text {
+    flex: 1 1 auto;
+    text-align: center;
+    color: #ffffff;
+    font-style: italic;
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+/* off-screen text measurer for the name column width */
+.viz-probe {
+    position: absolute;
+    visibility: hidden;
+    white-space: nowrap;
+    font-family: Rockwell, "Rockwell Nova", Arvo, Georgia, serif;
+    font-size: 11pt;
+}
+.viz-probe.bold { font-family: "Radikal", sans-serif; font-weight: bold; }
