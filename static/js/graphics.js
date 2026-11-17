@@ -11,17 +11,7 @@ const PLANNING_DECAY = 0.88     // the model's planning_gw_decay (fpl_model/conf
 const APP_THRESHOLD = 0.10      // tables 1 and 3: leave out a player whose chance of playing that GW is 10% or less
 const ROWS = 30
 
-// cell backgrounds by team
-const TEAM_FILL = {
-    LEE: '#ffffff', TOT: '#ffffff',
-    FUL: '#f0f0f0', NEW: '#f0f0f0',
-    ARS: '#ffdcdc', BRE: '#ffdcdc', NFO: '#ffdcdc', SUN: '#ffdcdc',
-    BOU: '#ffb4b4', LIV: '#ffb4b4', MUN: '#ffb4b4',
-    HUL: '#f7dbad',
-    AVL: '#f5b4ff', CRY: '#f5b4ff',
-    BHA: '#b4e1ff', COV: '#b4e1ff', MCI: '#b4e1ff',
-    CHE: '#c8c8ff', EVE: '#c8c8ff', IPS: '#c8c8ff',
-}
+// cell backgrounds by team: TEAM_FILL / team_fill, shared with the projections table (index.js)
 
 // one column per block of up to 30 players: [position, first rank, last rank, heading]
 const POS_COLUMNS = [
@@ -49,7 +39,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 
 // a player's name + points cells, filled in their team's colour; ' dotted' marks the second column of a position
 function player_cells(p, value, crown, edge) {
-    let fill = `background:${TEAM_FILL[p.team] || '#ffffff'}`
+    let fill = `background:${team_fill(p.team)}`
     let name = (crown ? '👑 ' : '') + p.name
     return `<td class="nm${edge}" style="${fill}">${esc(name)}</td><td class="pt" style="${fill}">${value.toFixed(2)}</td>`
 }

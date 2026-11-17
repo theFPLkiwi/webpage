@@ -1,9 +1,42 @@
 
+// cell backgrounds by team: the projections table (Name / Pos / Team / Price and the line under each player),
+// the team filter chips and the graphics
+const TEAM_FILL = {
+    LEE: '#ffffff', TOT: '#ffffff',
+    FUL: '#f0f0f0', NEW: '#f0f0f0',
+    ARS: '#ffdcdc', BRE: '#ffdcdc', NFO: '#ffdcdc', SUN: '#ffdcdc',
+    BOU: '#ffb4b4', LIV: '#ffb4b4', MUN: '#ffb4b4',
+    HUL: '#f7dbad',
+    AVL: '#f5b4ff', CRY: '#f5b4ff',
+    BHA: '#b4e1ff', COV: '#b4e1ff', MCI: '#b4e1ff',
+    CHE: '#c8c8ff', EVE: '#c8c8ff', IPS: '#c8c8ff',
+}
+const team_fill = t => TEAM_FILL[t] || '#ffffff'
+
+// light / dark mode for the whole site; the choice is remembered per browser (set before first paint in index.html)
+const is_dark = () => document.documentElement.getAttribute('data-theme') === 'dark'
+
+// xPts / xMin text colours, high -> mid -> low: darker on the white page (4.5:1 or better), lighter on black
+const GRADE = { light: ['#00838f', '#666666', '#b51d0d'], dark: ['#3ddbea', '#ababab', '#ff7a66'] }
+
+function show_theme() {
+    let dark = is_dark()
+    $('#themeToggle').text(dark ? '🌙 Dark Mode' : '☀️ Light Mode').attr('aria-pressed', dark)
+}
+
+function set_theme(dark) {
+    if (dark) document.documentElement.setAttribute('data-theme', 'dark')
+    else document.documentElement.removeAttribute('data-theme')
+    try { localStorage.setItem('kiwi_theme', dark ? 'dark' : 'light') } catch (e) {}
+    show_theme()
+    if (S.table) S.table.rows().invalidate('data').draw(false)      // re-colour the xPts / xMin text
+}
+
 let scaled_color = ({
     d,
     min = 0,
     max = 1,
-    colors = ["#00adbe", "#838383", "#d9210e"],
+    colors = GRADE[is_dark() ? 'dark' : 'light'],
     ascending = true
 }) => {
     let dom = [-100, 0, 0.5, 1, 100]
@@ -60,11 +93,11 @@ function build_columns() {
     let [t_total, t_avg] = summary_titles()
     let cols = [
         { key: 'id', title: 'ID', data: 'id', className: 'text-muted text-right' },
-        { key: 'name', title: 'Name', data: 'name', className: 'sticky-left text-left col-name' },
-        { key: 'pos', title: 'Pos', data: r => ns ? r.pos[0] : r.pos },
-        { key: 'team', title: 'Team', data: 'team' },
+        { key: 'name', title: 'Name', data: 'name', className: 'sticky-left text-left col-name team-fill' },
+        { key: 'pos', title: 'Pos', data: r => ns ? r.pos[0] : r.pos, className: 'team-fill' },
+        { key: 'team', title: 'Team', data: 'team', className: 'team-fill' },
         { key: 'price', title: ns ? 'Value' : 'Price', data: r => ns ? Math.round(r.price * 10) : r.price,
-          filter: true },
+          filter: true, className: 'team-fill' },
         { key: 'total', title: t_total, data: 'total',
           render: num(1), filter: true, className: 'col-total' },
         { key: 'avg_min', title: t_avg, data: 'avg_min',
@@ -185,6 +218,8 @@ function build_table() {
              "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         autoWidth: false,
         deferRender: true,
+        // the team colour fills Name / Pos / Team / Price and the line under the player (styles.css)
+        createdRow: (tr, r) => tr.style.setProperty('--team', team_fill(r.team)),
         buttons: [
             { extend: 'csv', text: 'Download as CSV', exportOptions: { orthogonal: 'export', format: { header: (d, i) => S.columns[i].title } } },
             { text: 'Get raw data', action: () =>
@@ -211,15 +246,17 @@ function apply_decay() {
     redraw()
 }
 
-function chips(el, values, set) {
+// team chips are filled in the team colour when on
+function chips(el, values, set, team) {
     $(el).html(values.map(v =>
-        `<button type="button" class="chip ${set.has(v) ? 'on' : ''}" data-v="${v}" aria-pressed="${set.has(v)}">${v}</button>`
+        `<button type="button" class="chip ${team ? 'team-chip' : ''} ${set.has(v) ? 'on' : ''}" data-v="${v}"
+            ${team ? `style="--team:${team_fill(v)}"` : ''} aria-pressed="${set.has(v)}">${v}</button>`
     ).join(''))
 }
 
 function render_chips() {
     chips('#posChips', POS_ORDER.filter(p => S.rows.some(r => r.pos === p)), S.pos)
-    chips('#teamChips', _.uniq(S.rows.map(r => r.team)).sort(), S.team)
+    chips('#teamChips', _.uniq(S.rows.map(r => r.team)).sort(), S.team, true)
 }
 
 function bind_controls() {
@@ -304,6 +341,8 @@ if (/; wv\)|Twitter|FBAN|FBAV|Instagram/.test(navigator.userAgent)) {
 }
 
 $(document).ready(() => {
+    show_theme()
+    $('#themeToggle').on('click', () => set_theme(!is_dark()))
     fetch_latest_data().then(() => console.log('ready'), e => {
         console.error('No data', e)
         $('#loading').text('Could not load the projections.')

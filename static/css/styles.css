@@ -7,11 +7,57 @@
     --kiwi-green: #8dc63f;
     --kiwi-green-dark: #4a7314;
     --kiwi-tint: #f2f8e8;
+
+    /* page tokens: everything outside the graphics takes its colours from these */
+    --bg: #ffffff;
+    --text: #212529;
+    --muted: #6c757d;
+    --accent: var(--fpl-purple);            /* filled bars: header, column headings, active tab, buttons, chips */
+    --accent-hover: var(--fpl-purple-soft);
+    --on-accent: #ffffff;                   /* text on --accent */
+    --on-accent-muted: #d9c7db;
+    --accent-line: var(--kiwi-green);       /* the rule under the header and the column headings */
+    --brand-link: var(--kiwi-green);        /* Twitter link on the header bar */
+    --label: var(--fpl-purple);             /* purple text on the page */
+    --label-soft: var(--fpl-purple-soft);
+    --link: var(--kiwi-green-dark);         /* green text on the page */
+    --tint: var(--kiwi-tint);               /* row hover */
+    --line: #dee2e6;
+    --chip-border: #cdbfce;
+    --filter-bg: #f4eef5;
+    --filter-border: #dcd0dd;
+    --input-bg: #ffffff;
+    --input-text: #495057;
+    --input-border: #ced4da;
+}
+
+/* dark mode: black / white and purple / green swapped. Team fills keep their colours (with black text). */
+:root[data-theme="dark"] {
+    --bg: #000000;
+    --text: #f1f1f1;
+    --muted: #9aa0a6;
+    --accent: var(--kiwi-green);
+    --accent-hover: #a9d96a;
+    --on-accent: #000000;
+    --on-accent-muted: #3b5418;
+    --accent-line: #7b2d83;                 /* FPL purple, lifted so it shows on black */
+    --brand-link: var(--fpl-purple);
+    --label: var(--kiwi-green);
+    --label-soft: #b5dc80;
+    --link: #d0a3d6;                        /* light purple: the dark green's opposite, readable on black */
+    --tint: #2a1030;
+    --line: #333333;
+    --chip-border: #555555;
+    --filter-bg: #1a1a1a;
+    --filter-border: #333333;
+    --input-bg: #111111;
+    --input-text: #eeeeee;
+    --input-border: #444444;
 }
 
 body {
-    background: #ffffff;
-    color: #212529;
+    background: var(--bg);
+    color: var(--text);
 }
 
 .text-small {
@@ -21,32 +67,74 @@ body {
 .sticky-left {
     position: sticky !important;
     left: 0 !important;
-    background-color: white !important;
+    background-color: var(--bg) !important;
     z-index: 99;
 }
 
 /* header bar */
 .kiwi-nav {
-    background-color: var(--fpl-purple);
-    border-bottom: 4px solid var(--kiwi-green);
+    background-color: var(--accent);
+    border-bottom: 4px solid var(--accent-line);
+}
+/* kiwi + Twitter on the left, title in the middle, light / dark toggle on the right; on a phone the title
+   wraps rather than the row (scoped to outrank Bootstrap's .navbar > .container, which wraps) */
+.navbar > .container.kiwi-nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+}
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: none;
+}
+.kiwi-nav .navbar-brand {
+    margin-right: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    white-space: normal;
+    text-wrap: balance;
 }
 .kiwi-nav .navbar-brand,
 .kiwi-nav .navbar-brand:hover {
-    color: #ffffff;
+    color: var(--on-accent);
     font-weight: 600;
 }
 .kiwi-nav .nav-link-kiwi {
-    color: var(--kiwi-green);
+    color: var(--brand-link);
     font-weight: 600;
 }
 .kiwi-nav .nav-link-kiwi:hover,
 .kiwi-nav .nav-link-kiwi:focus {
-    color: #ffffff;
+    color: var(--on-accent);
+}
+.theme-toggle {
+    flex: none;
+    font-size: small;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: transparent;
+    border: 1px solid var(--brand-link);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.theme-toggle:hover {
+    border-color: var(--on-accent);
+}
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--brand-link);
+    outline-offset: 2px;
 }
 
 .updated-line {
     margin-top: 0.75rem;
-    color: var(--fpl-purple-soft);
+    color: var(--label-soft);
     font-size: small;
     font-weight: 600;
 }
@@ -54,46 +142,81 @@ body {
 /* table headers */
 table.dataTable thead th,
 #proj_table thead th {
-    background-color: var(--fpl-purple) !important;
-    color: #ffffff;
-    border-bottom: 3px solid var(--kiwi-green) !important;
+    background-color: var(--accent) !important;
+    color: var(--on-accent);
+    border-bottom: 3px solid var(--accent-line) !important;
     border-top: none;
     white-space: nowrap;
 }
 table.dataTable thead th.text-muted {
-    color: #d9c7db !important;
+    color: var(--on-accent-muted) !important;
 }
-#proj_table tbody tr:hover td {
-    background-color: var(--kiwi-tint);
+#proj_table tbody tr:hover td:not(.team-fill) {
+    background-color: var(--tint);
 }
-#proj_table tbody tr:hover td.sticky-left {
-    background-color: var(--kiwi-tint) !important;
+
+/* team colours: Name / Pos / Team / Price filled, and the line under each player (set per row in index.js) */
+.table {
+    color: var(--text);
+}
+#proj_table tbody td {
+    border-top: none;
+    border-bottom: 2px solid var(--team, var(--line));
+}
+#proj_table tbody td.team-fill {
+    background-color: var(--team) !important;
+    color: #000000;
 }
 
 /* controls */
 .form-group label {
-    color: var(--fpl-purple);
+    color: var(--label);
     font-weight: 600;
 }
 .page-item.active .page-link {
-    background-color: var(--fpl-purple);
-    border-color: var(--fpl-purple);
-    color: #ffffff;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+}
+.page-link,
+.page-item.disabled .page-link {
+    background-color: var(--bg);
+    border-color: var(--line);
 }
 .page-link {
-    color: var(--kiwi-green-dark);
+    color: var(--link);
+}
+.page-item.disabled .page-link {
+    color: var(--muted);
 }
 .page-link:hover {
-    color: var(--fpl-purple);
+    color: var(--label);
+    background-color: var(--tint);
+    border-color: var(--line);
 }
 #buttons .btn-secondary {
-    background-color: var(--fpl-purple);
-    border-color: var(--fpl-purple);
+    color: var(--on-accent);
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 #buttons .btn-secondary:hover,
 #buttons .btn-secondary:focus {
-    background-color: var(--kiwi-green-dark);
-    border-color: var(--kiwi-green-dark);
+    color: var(--on-accent);
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+/* inputs and selects (controls, DataTables' search and page length) */
+.form-control,
+.custom-select,
+.dataTables_wrapper input,
+.dataTables_wrapper select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
+}
+.form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
 }
 
 .paginate_button a {
@@ -101,7 +224,7 @@ table.dataTable thead th.text-muted {
 }
 
 #buttons button:nth-of-type(2) {
-    border-left: 1px solid white;
+    border-left: 1px solid var(--bg);
 }
 
 @media (max-width: 600px) {
@@ -127,7 +250,7 @@ table.dataTable thead th.text-muted {
     width: 6rem;
 }
 .control-row .form-text {
-    color: #6c757d;
+    color: var(--muted);
 }
 .form-check-group {
     display: flex;
@@ -136,13 +259,13 @@ table.dataTable thead th.text-muted {
     padding-top: 1.9rem;
 }
 .btn-outline-kiwi {
-    color: var(--kiwi-green-dark);
-    border-color: var(--kiwi-green-dark);
+    color: var(--link);
+    border-color: var(--link);
 }
 .btn-outline-kiwi:hover,
 .btn-outline-kiwi:focus {
-    color: #ffffff;
-    background-color: var(--kiwi-green-dark);
+    color: var(--bg);
+    background-color: var(--link);
 }
 
 /* heading stays on the first line; the chips (and All / None) wrap beside it */
@@ -154,7 +277,7 @@ table.dataTable thead th.text-muted {
     margin-bottom: 0.4rem;
 }
 .chip-label {
-    color: var(--fpl-purple);
+    color: var(--label);
     font-weight: 600;
     font-size: small;
     flex: 0 0 4.5rem;
@@ -175,39 +298,46 @@ table.dataTable thead th.text-muted {
     font-size: small;
     padding: 0.1rem 0.55rem;
     border-radius: 999px;
-    border: 1px solid #cdbfce;
-    background: #ffffff;
-    color: #6c757d;
+    border: 1px solid var(--chip-border);
+    background: var(--bg);
+    color: var(--muted);
     cursor: pointer;
 }
 .chip.on {
-    background: var(--fpl-purple);
-    border-color: var(--fpl-purple);
-    color: #ffffff;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+}
+/* team chips: the team colour with black text when on (a dark outline so the white teams show as on) */
+.chip.team-chip.on {
+    background: var(--team);
+    border-color: rgba(0, 0, 0, 0.55);
+    color: #000000;
+    font-weight: 600;
 }
 .chip:focus-visible,
 .chip-all:focus-visible {
-    outline: 2px solid var(--kiwi-green-dark);
+    outline: 2px solid var(--link);
     outline-offset: 1px;
 }
 .chip-all {
     font-size: small;
     background: none;
     border: none;
-    color: var(--kiwi-green-dark);
+    color: var(--link);
     text-decoration: underline;
     padding: 0 0.2rem;
     cursor: pointer;
 }
 .filter-hint {
     font-size: small;
-    color: #6c757d;
+    color: var(--muted);
 }
 
 /* min / max row under the column headers */
 table.dataTable thead tr.filter-row th {
-    background-color: #f4eef5 !important;
-    border-bottom: 1px solid #dcd0dd !important;
+    background-color: var(--filter-bg) !important;
+    border-bottom: 1px solid var(--filter-border) !important;
     padding: 2px 3px;
 }
 table.dataTable thead tr.filter-row th:before,
@@ -220,12 +350,14 @@ input.colf {
     margin: 1px auto;
     font-size: 11px;
     padding: 1px 3px;
-    border: 1px solid #cdbfce;
+    border: 1px solid var(--chip-border);
     border-radius: 3px;
+    background: var(--input-bg);
+    color: var(--input-text);
 }
 input.colf:focus {
-    outline: 2px solid var(--kiwi-green-dark);
-    border-color: var(--kiwi-green-dark);
+    outline: 2px solid var(--link);
+    border-color: var(--link);
 }
 td.col-total {
     font-weight: 600;
@@ -278,15 +410,15 @@ input.colf::-webkit-inner-spin-button {
     padding-top: 1.9rem;
 }
 .btn-toggle {
-    color: #ffffff;
-    background-color: var(--fpl-purple);
-    border-color: var(--fpl-purple);
+    color: var(--on-accent);
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 .btn-toggle:hover,
 .btn-toggle:focus {
-    color: #ffffff;
-    background-color: var(--fpl-purple-soft);
-    border-color: var(--fpl-purple-soft);
+    color: var(--on-accent);
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
 }
 .panel-row {
     display: flex;
@@ -317,8 +449,8 @@ input.colf::-webkit-inner-spin-button {
     padding-right: 1.3rem;          /* room for the sort arrows */
 }
 #proj_table thead tr.filter-row th {
-    background-color: #f4eef5 !important;
-    border-bottom: 1px solid #dcd0dd !important;
+    background-color: var(--filter-bg) !important;
+    border-bottom: 1px solid var(--filter-border) !important;
     padding: 2px 3px;
 }
 
@@ -330,20 +462,20 @@ input.colf::-webkit-inner-spin-button {
 /* tabs */
 .kiwi-tabs {
     margin-top: 0.75rem;
-    border-bottom: 2px solid var(--fpl-purple);
+    border-bottom: 2px solid var(--accent);
 }
 .kiwi-tabs .nav-link {
-    color: var(--fpl-purple);
+    color: var(--label);
     font-weight: 600;
     border: 1px solid transparent;
 }
 .kiwi-tabs .nav-link:hover {
-    color: var(--kiwi-green-dark);
+    color: var(--link);
 }
 .kiwi-tabs .nav-link.active {
-    color: #ffffff;
-    background-color: var(--fpl-purple);
-    border-color: var(--fpl-purple);
+    color: var(--on-accent);
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 
 /* graphics: the FPL_viz.xlsx grid (columns 125 + 53 px, rows 19 px, Rockwell 11pt). Rockwell comes from the

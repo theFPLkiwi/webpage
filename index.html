@@ -16,16 +16,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/js/fontawesome.min.js" integrity="sha256-TMRxGf3NaZhrxTfD8y/NGiyE4UXBA3udH1l+Co8JDVU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css" integrity="sha256-rx5u3IdaOCszi7Jb18XD9HSn8bNiEgAqWJbdBvIYYyU=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap">
-    <link rel="stylesheet" href="static/css/styles.css?v=20261110f">
+    <link rel="stylesheet" href="static/css/styles.css?v=20261117a">
+    <script>
+        // light / dark mode: apply the saved choice before the page paints (toggle in the header, index.js)
+        try { if (localStorage.getItem('kiwi_theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark') } catch (e) {}
+    </script>
 </head>
 <body>
 
     <header>
-        <nav class="navbar navbar-dark kiwi-nav">
-            <div class="container d-flex justify-content-between">
-                <img src="./static/img/icon.jpg" class="rounded" height="30" />
+        <nav class="navbar kiwi-nav">
+            <div class="container kiwi-nav-row">
+                <div class="nav-left">
+                    <img src="./static/img/icon.jpg" class="rounded" height="30" alt="The FPL Kiwi" />
+                    <a class="title-text nav-link-kiwi" href="https://twitter.com/theFPLkiwi" target="_blank">Twitter</a>
+                </div>
                 <a class="navbar-brand mb-0 h1 title-text" href="index.html">The FPL Kiwi - FPL Projections</a>
-                <a class="title-text nav-link-kiwi" href="https://twitter.com/theFPLkiwi" target="_blank">Twitter</a>
+                <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">☀️ Light Mode</button>
             </div>
         </nav>
     </header>
@@ -121,8 +128,8 @@
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js" integrity="sha256-ur/YlHMU96MxHEsy3fHGszZHas7NzH4RQlD4tDVvFhw=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/b-1.6.5/b-colvis-1.6.5/b-html5-1.6.5/fc-3.3.2/fh-3.1.7/r-2.2.6/sp-1.2.2/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.21/jquery.csv.js" integrity="sha512-2ypsPur7qcA+2JjmmIJR1c4GWFqTLIe1naXXplraMg0aWyTOyAMpOk+QL+ULpzwrO/GdwA3qB3FhVyyiR8gdhw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="static/js/index.js?v=20261110f"></script>
-    <script src="static/js/graphics.js?v=20261110f"></script>
+    <script src="static/js/index.js?v=20261117a"></script>
+    <script src="static/js/graphics.js?v=20261117a"></script>
 
 </body>
 </html>
